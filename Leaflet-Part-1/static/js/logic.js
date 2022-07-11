@@ -1,5 +1,6 @@
 // Establish a URL var to the geoJSON and read in with D3
-url = https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson
+url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
+
 d3.json(url).then(importedData => {
     console.log(importedData)
 });
