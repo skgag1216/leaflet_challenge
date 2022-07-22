@@ -3,7 +3,7 @@ queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.g
 
 d3.json(queryUrl).then(data => {
     console.log(data);
-    createFeatures(data.features);
+    createFeatures(data);
 });
 
 function createFeatures(earthquakeData) {
@@ -13,12 +13,54 @@ function createFeatures(earthquakeData) {
     function onEachFeature(feature, layer) {
       layer.bindPopup(`<h3>${feature.properties.place}</h3><hr><p>${new Date(feature.properties.time)}</p>`);
     }
+    function setStyle(feature) {
+      return {
+        opacity: 1,
+        fillOpacity: 1,
+        fillColor: getColor(feature.geometry.coordinates[2]),
+        color: "#000000",
+        radius: getRadius(feature.properties.mag),
+        stroke: true,
+        weight: 0.5
+      };
+    }
+  
+      function getColor(depth) {
+      switch (true) {
+        case depth > 90:
+          return "#581845";
+        case depth > 70:
+          return "#900C3F";
+        case depth > 50:
+          return "#C70039";
+        case depth > 30:
+          return "#FF5733";
+        case depth > 10:
+          return "#FFC300";
+        default:
+          return "#DAF7A6";
+      }
+    }
+  
+  
+    function getRadius(magnitude) {
+      if (magnitude === 0) {
+        return 1;
+      }
+  
+      return magnitude * 4;
+    }
+  
     // Create a GeoJSON layer that contains the features array on the earthquakeData object.
     // Run the onEachFeature function once for each piece of data in the array.
     var earthquakes = L.geoJSON(earthquakeData, {
+      pointToLayer: function (feature, latlng){
+        return L.circleMarker(latlng)
+      },
+      style: setStyle,
       onEachFeature: onEachFeature
     });
-  
+    console.log(earthquakes)
     // Send our earthquakes layer to the createMap function/
     createMap(earthquakes);
   }
@@ -42,15 +84,16 @@ function createFeatures(earthquakeData) {
   
     // Create an overlay object to hold our overlay.
     var overlayMaps = {
-      Earthquakes: earthquakes
+      "Earthquakes": earthquakes
     };
   
+
     // Create our map, giving it the streetmap and earthquakes layers to display on load.
     var myMap = L.map("map", {
       center: [
         37.09, -95.71
       ],
-      zoom: 4,
+      zoom: 3,
       layers: [street, earthquakes]
     });
   
@@ -63,3 +106,9 @@ function createFeatures(earthquakeData) {
   
   }
   
+
+//   let satelliteStreets = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v11/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+// 	attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery (c) <a href="https://www.mapbox.com/">Mapbox</a>',
+// 	maxZoom: 18,
+// 	accessToken: API_KEY
+// });
