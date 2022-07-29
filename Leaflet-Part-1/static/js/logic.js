@@ -74,12 +74,20 @@ function createFeatures(earthquakeData) {
   
     var topo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
       attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+    })
+    
+    var satelliteStreets = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v11/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+      attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery (c) <a href="https://www.mapbox.com/">Mapbox</a>',
+      maxZoom: 18,
+      accessToken: API_KEY
     });
   
     // Create a baseMaps object.
     var baseMaps = {
+      "Satellite Map": satelliteStreets,
       "Street Map": street,
       "Topographic Map": topo
+      
     };
   
     // Create an overlay object to hold our overlay.
@@ -94,7 +102,7 @@ function createFeatures(earthquakeData) {
         37.09, -95.71
       ],
       zoom: 3,
-      layers: [street, earthquakes]
+      layers: [satelliteStreets, earthquakes]
     });
   
     // Create a layer control.
