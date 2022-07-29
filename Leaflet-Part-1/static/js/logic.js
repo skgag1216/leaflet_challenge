@@ -103,9 +103,27 @@ function createFeatures(earthquakeData) {
     L.control.layers(baseMaps, overlayMaps, {
       collapsed: false
     }).addTo(myMap);
-  
+
+  /*Legend specific*/
+  var legend = L.control({ position: "bottomright" });
+
+  legend.onAdd = function (map) {
+      var div = L.DomUtil.create("div", "info legend");
+      div.innerHTML += "<h4>Depth</h4>";
+      div.innerHTML += '<i style="background: #DAF7A6"></i><span><10</span><br>';
+      div.innerHTML += '<i style="background: #FFC300"></i><span>10-30</span><br>';
+      div.innerHTML += '<i style="background: #FF5733"></i><span>30-50</span><br>';
+      div.innerHTML += '<i style="background: #C70039"></i><span>50-70</span><br>';
+      div.innerHTML += '<i style="background: #900C3F"></i><span>70-90</span><br>';
+      div.innerHTML += '<i style="background: #581845"></i><span>>90</span><br>';
+
+      return div;
   }
+
+  legend.addTo(myMap);
   
+};
+
 
 //   let satelliteStreets = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v11/tiles/{z}/{x}/{y}?access_token={accessToken}', {
 // 	attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery (c) <a href="https://www.mapbox.com/">Mapbox</a>',
